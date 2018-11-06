@@ -74,7 +74,8 @@ class Model(object):
         """
         Generate activation noise by drawing a value from a logistic distribution with mean 0 and scale s.
         """
-        return 0
+        rand = random.uniform(0.001,0.999)
+		return s * math.log((1 - rand)/rand)
 
 
     def get_spreading_activation_from_goal(self, chunk):
