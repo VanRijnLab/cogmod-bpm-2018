@@ -4,6 +4,7 @@ class Chunk(object):
         self.name = name
         self.slots = slots
         self.encounters = []
+        self.fan = 0 # How many other chunks refer to this chunk?
 
     
     def add_encounter(self, time):
@@ -19,5 +20,5 @@ class Chunk(object):
         encounters = str(self.encounters)
         return "Chunk " + self.name + "\n" \
         "Slots: " + slots + "\n" \
-        "Encounters: " + encounters + "\n"
+        "Encounters: " + encounters + "\n" + "Fan: " + str(self.fan) + "\n"
     

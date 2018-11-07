@@ -13,14 +13,27 @@ class Model(object):
 
     lf = 1.0 # latency factor (:lf; default: 1.0)
     le = 1.0 # latency exponent (:le; default: 1.0)
-
+    
+    rt = -1.0 # retrieval threshols (:rt)
+    
+    mas = 2.0 # maxmimum spreading (:mas; default: 2.0)
 
     def __init__(self):
         self.time = 0
         self.goal = None
         self.dm = []
 
+    def get_chunk(self, name):
+        """
+        Find the Chunk given its name
+        """
+        chunk_idx = [i for i, j in enumerate(self.dm) if j.name == name]
+        if len(chunk_idx) == 0:
+            return None
+        else:
+            return self.dm[chunk_idx[0]]
 
+        
     def add_encounter(self, chunk):
         """
         Add an encounter of a specified chunk at the current time.
@@ -30,6 +43,10 @@ class Model(object):
         # If a chunk by this name does not yet exist, add it to DM
         if chunk.name not in [chunk.name for chunk in self.dm]:
             self.dm.append(chunk)
+            # Calculate the fan by checking all slot values
+            for ch1 in self.dm:
+                if ch1.name in chunk.slots.values():
+                    ch1.fan +=1
         
         # If a chunk by this name does exist, ensure that it has the same slots and slot values
         chunk_idx = [i for i, j in enumerate(self.dm) if j.name == chunk.name][0]
@@ -75,7 +92,7 @@ class Model(object):
         Generate activation noise by drawing a value from a logistic distribution with mean 0 and scale s.
         """
         rand = random.uniform(0.001,0.999)
-		return s * math.log((1 - rand)/rand)
+        return s * math.log((1 - rand)/rand)
 
 
     def get_spreading_activation_from_goal(self, chunk):
@@ -87,17 +104,40 @@ class Model(object):
             return 0
 
         if type(self.goal) is Chunk:
-            total_slots = len(self.goal.slots)
-            matching_slots = 0
+            spreading = 0.0
             for slot, value in self.goal.slots.items():
-                if value in chunk.slots.values():
-                    matching_slots += 1
-        
-        if total_slots == 0:
-            return 0
+                ch1 = self.get_chunk(value)
+                if ch1 != None and value in chunk.slots.values() and ch1.fan > 0:
+                    spreading += max(0, self.mas - math.log(ch1.fan))
+        return spreading * self.ga
+    
+    def match(self, chunk1, pattern):
+        """
+        Does chunk1 match pattern in chunk pattern?
+        """
+        for slot, value in pattern.slots.items():
+            if not(slot in chunk1.slots and chunk1.slots[slot] == value):
+                return False
+        return True
 
-        return matching_slots * (self.ga / total_slots)
-
+    def retrieve(self, chunk):
+        """
+        Retrieve the chunk with the highest activation that matches the request in chunk
+        Returns the chunk (or None) and the retrieval latency
+        """
+        retrieve_error = False
+        bestMatch = None
+        bestActivation = self.rt
+        for ch in self.dm:
+            act = self.get_activation(ch)
+            if self.match(ch, chunk) and act > bestActivation:
+                bestMatch = ch
+                bestActivation = act
+        if bestMatch == None:
+            latency = self.lf * math.exp(-self.le * self.rt)
+        else:
+            latency = self.lf * math.exp(-self.le * bestActivation) # calculate it here to avoid a new noise draw
+        return bestMatch, latency
 
     def __str__(self):
         return "\n=== Model ===\n" \
