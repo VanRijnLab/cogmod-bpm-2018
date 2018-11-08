@@ -105,11 +105,17 @@ class Model(object):
 
         if type(self.goal) is Chunk:
             spreading = 0.0
+            total_slots = 0
             for slot, value in self.goal.slots.items():
+                total_slots += 1
                 ch1 = self.get_chunk(value)
                 if ch1 != None and value in chunk.slots.values() and ch1.fan > 0:
                     spreading += max(0, self.mas - math.log(ch1.fan))
-        return spreading * self.ga
+        
+        if total_slots == 0:
+            return 0
+
+        return spreading * (self.ga / total_slots)
     
     def match(self, chunk1, pattern):
         """
