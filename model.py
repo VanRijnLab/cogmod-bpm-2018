@@ -9,12 +9,12 @@ class Model(object):
     ga = 1.0 # spreading activation from the goal (:ga; default: 1.0)
 
     d = 0.5 # decay (:bll; default: 0.5)
-    s = 0 # scale of activation noise (:ans; default = 0)
+    s = 0 # scale of activation noise (:ans; default: 0)
 
     lf = 1.0 # latency factor (:lf; default: 1.0)
     le = 1.0 # latency exponent (:le; default: 1.0)
     
-    rt = -1.0 # retrieval threshols (:rt)
+    rt = -1.0 # retrieval threshold (:rt; default: 0.0)
     
     mas = 2.0 # maxmimum spreading (:mas; default: 2.0)
 
@@ -131,7 +131,6 @@ class Model(object):
         Retrieve the chunk with the highest activation that matches the request in chunk
         Returns the chunk (or None) and the retrieval latency
         """
-        retrieve_error = False
         bestMatch = None
         bestActivation = self.rt
         for ch in self.dm:
