@@ -16,9 +16,8 @@ class Chunk(object):
 
 
     def __str__(self):
-        slots = str(self.slots)
-        encounters = str(self.encounters)
-        return "Chunk " + self.name + "\n" \
-        "Slots: " + slots + "\n" \
-        "Encounters: " + encounters + "\n" + "Fan: " + str(self.fan) + "\n"
+        return "Chunk " + str(self.name) + "\n" \
+        "Slots: " + str(self.slots) + "\n" \
+        "Encounters: " + str(self.encounters) + "\n" \
+        "Fan: " + str(self.fan) + "\n"
     

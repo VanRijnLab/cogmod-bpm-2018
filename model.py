@@ -7,6 +7,7 @@ class Model(object):
     # Model parameters
 
     ga = 1.0 # spreading activation from the goal (:ga; default: 1.0)
+    mas = 2.0 # maxmimum spreading (:mas; default: 2.0)
 
     d = 0.5 # decay (:bll; default: 0.5)
     s = 0 # scale of activation noise (:ans; default: 0)
@@ -16,7 +17,6 @@ class Model(object):
     
     rt = -1.0 # retrieval threshold (:rt; default: 0.0)
     
-    mas = 2.0 # maxmimum spreading (:mas; default: 2.0)
 
     def __init__(self):
         self.time = 0
@@ -33,7 +33,18 @@ class Model(object):
         else:
             return self.dm[chunk_idx[0]]
 
-        
+
+    def update_fan(self):
+        """
+        Recalculate the fan of all chunks in DM.
+        """
+        for ch1 in self.dm:
+            ch1.fan = 0
+            for ch2 in self.dm:
+                if ch1.name in ch2.slots.values():
+                    ch1.fan += 1 # ch2 refers to ch1
+
+
     def add_encounter(self, chunk):
         """
         Add an encounter of a specified chunk at the current time.
@@ -43,10 +54,6 @@ class Model(object):
         # If a chunk by this name does not yet exist, add it to DM
         if chunk.name not in [chunk.name for chunk in self.dm]:
             self.dm.append(chunk)
-            # Calculate the fan by checking all slot values
-            for ch1 in self.dm:
-                if ch1.name in chunk.slots.values():
-                    ch1.fan +=1
         
         # If a chunk by this name does exist, ensure that it has the same slots and slot values
         chunk_idx = [i for i, j in enumerate(self.dm) if j.name == chunk.name][0]
@@ -55,6 +62,16 @@ class Model(object):
 
         # Add an encounter at the current time
         self.dm[chunk_idx].add_encounter(self.time)
+
+        # Add slot values as singleton chunks
+        for v in chunk.slots.values():
+            s = Chunk(name = v, slots = {})
+            self.add_encounter(s)
+
+        # Recalculate the fan
+        self.update_fan()
+
+
 
 
     def get_activation(self, chunk):
@@ -106,7 +123,7 @@ class Model(object):
         if type(self.goal) is Chunk:
             spreading = 0.0
             total_slots = 0
-            for slot, value in self.goal.slots.items():
+            for value in self.goal.slots.values():
                 total_slots += 1
                 ch1 = self.get_chunk(value)
                 if ch1 != None and value in chunk.slots.values() and ch1.fan > 0:
@@ -116,7 +133,8 @@ class Model(object):
             return 0
 
         return spreading * (self.ga / total_slots)
-    
+
+
     def match(self, chunk1, pattern):
         """
         Does chunk1 match pattern in chunk pattern?
@@ -125,6 +143,7 @@ class Model(object):
             if not(slot in chunk1.slots and chunk1.slots[slot] == value):
                 return False
         return True
+
 
     def retrieve(self, chunk):
         """
@@ -143,6 +162,7 @@ class Model(object):
         else:
             latency = self.lf * math.exp(-self.le * bestActivation) # calculate it here to avoid a new noise draw
         return bestMatch, latency
+
 
     def __str__(self):
         return "\n=== Model ===\n" \
