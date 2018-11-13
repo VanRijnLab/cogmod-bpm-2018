@@ -16,6 +16,8 @@ class Model(object):
     le = 1.0 # latency exponent (:le; default: 1.0)
     
     rt = -1.0 # retrieval threshold (:rt; default: 0.0)
+
+    t = 0.2 # blending noise parameter from Taatgen & van Rijn (2011)
     
 
     def __init__(self):
@@ -162,6 +164,28 @@ class Model(object):
         else:
             latency = self.lf * math.exp(-self.le * bestActivation) # calculate it here to avoid a new noise draw
         return bestMatch, latency
+
+
+    def get_retrieval_probability(self, chunk, pattern):
+        """
+        Returns the probability of retrieving a specific chunk that matches the specified pattern,
+        given its activation and the activation of the other matching chunks
+        """
+        activations = dict([(ch, self.get_activation(ch))for ch in self.dm if self.match(ch, pattern)])
+        return math.exp(activations[chunk] / self.t)  / sum([math.exp(a / self.t) for a in activations.values()])
+
+
+    def retrieve_blended_trace(self, pattern, slot):
+        """
+        Returns a blend of the requested slot value from all chunks in DM that match the specified pattern, weighted by their activation
+        """
+
+        eligible_chunks = [ch for ch in self.dm if self.match(ch, pattern) and slot in ch.slots and ch.slots[slot]]
+        
+        if not eligible_chunks:
+            return None
+
+        return sum([self.get_retrieval_probability(ch, pattern) * ch.slots[slot] for ch in eligible_chunks])
 
 
     def __str__(self):
