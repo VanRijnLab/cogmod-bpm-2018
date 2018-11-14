@@ -10,15 +10,15 @@ class Model(object):
     mas = 2.0 # maxmimum spreading (:mas; default: 2.0)
 
     d = 0.5 # decay (:bll; default: 0.5)
-    s = 0 # scale of activation noise (:ans; default: 0)
+    s = 0.2 # scale of activation noise (:ans; default: 0)
 
-    lf = 1.0 # latency factor (:lf; default: 1.0)
+    lf = 0.1 # latency factor (:lf; default: 0.1)
     le = 1.0 # latency exponent (:le; default: 1.0)
     
     rt = -1.0 # retrieval threshold (:rt; default: 0.0)
 
-    t = 0.2 # blending noise parameter from Taatgen & van Rijn (2011)
-    
+    # t = 0.2 # blending noise parameter from Taatgen & van Rijn (2011)
+    # NT: t is essentially the same as s, so I am removing it here and replace t by s in the code
 
     def __init__(self):
         self.time = 0
@@ -67,8 +67,9 @@ class Model(object):
 
         # Add slot values as singleton chunks
         for v in chunk.slots.values():
-            s = Chunk(name = v, slots = {})
-            self.add_encounter(s)
+            if type(v) == str and v not in [ch.name for ch in self.dm]:  # NT: we want some contraints on the adding of chunks
+                s = Chunk(name = v, slots = {})
+                self.add_encounter(s)
 
         # Recalculate the fan
         self.update_fan()
@@ -76,9 +77,9 @@ class Model(object):
 
 
 
-    def get_activation(self, chunk):
+    def get_activation_no_noise(self, chunk):
         """
-        Get the activation of the specified chunk at the current time.
+        Get the activation of the specified chunk at the current time, but without noise
         """
         # The specified chunk should exist in DM
         if chunk not in self.dm:
@@ -95,7 +96,14 @@ class Model(object):
 
         spreading_activation = self.get_spreading_activation_from_goal(chunk)
 
-        return baselevel_activation + spreading_activation + self.noise(self.s)
+        return baselevel_activation + spreading_activation
+    
+
+    def get_activation(self, chunk):
+        """
+        Get the activation of the specified chunk at the current time.
+        """
+        return self.get_activation_no_noise(chunk) + self.noise(self.s)
 
 
     def get_latency(self, chunk):
@@ -171,8 +179,8 @@ class Model(object):
         Returns the probability of retrieving a specific chunk that matches the specified pattern,
         given its activation and the activation of the other matching chunks
         """
-        activations = dict([(ch, self.get_activation(ch))for ch in self.dm if self.match(ch, pattern)])
-        return math.exp(activations[chunk] / self.t)  / sum([math.exp(a / self.t) for a in activations.values()])
+        activations = dict([(ch, self.get_activation_no_noise(ch))for ch in self.dm if self.match(ch, pattern)])
+        return math.exp(activations[chunk] / self.s)  / sum([math.exp(a / self.s) for a in activations.values()])
 
 
     def retrieve_blended_trace(self, pattern, slot):
@@ -182,10 +190,12 @@ class Model(object):
 
         eligible_chunks = [ch for ch in self.dm if self.match(ch, pattern) and slot in ch.slots and ch.slots[slot]]
         
+        latency = self.lf * math.exp(-self.le * self.rt) # Latency is determined by the retrieval threshold
+        
         if not eligible_chunks:
-            return None
+            return None, latency
 
-        return sum([self.get_retrieval_probability(ch, pattern) * ch.slots[slot] for ch in eligible_chunks])
+        return sum([self.get_retrieval_probability(ch, pattern) * ch.slots[slot] for ch in eligible_chunks]), latency
 
 
     def __str__(self):
