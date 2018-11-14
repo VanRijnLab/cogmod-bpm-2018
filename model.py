@@ -17,13 +17,12 @@ class Model(object):
     
     rt = -1.0 # retrieval threshold (:rt; default: 0.0)
 
-    # t = 0.2 # blending noise parameter from Taatgen & van Rijn (2011)
-    # NT: t is essentially the same as s, so I am removing it here and replace t by s in the code
 
     def __init__(self):
         self.time = 0
         self.goal = None
         self.dm = []
+
 
     def get_chunk(self, name):
         """
@@ -36,26 +35,18 @@ class Model(object):
             return self.dm[chunk_idx[0]]
 
 
-    def update_fan(self):
-        """
-        Recalculate the fan of all chunks in DM.
-        """
-        for ch1 in self.dm:
-            ch1.fan = 0
-            for ch2 in self.dm:
-                if ch1.name in ch2.slots.values():
-                    ch1.fan += 1 # ch2 refers to ch1
-
-
     def add_encounter(self, chunk):
         """
         Add an encounter of a specified chunk at the current time.
         If the chunk does not exist yet, create it first.
         """
 
+        update_fan = False
+
         # If a chunk by this name does not yet exist, add it to DM
         if chunk.name not in [chunk.name for chunk in self.dm]:
             self.dm.append(chunk)
+            update_fan = True
         
         # If a chunk by this name does exist, ensure that it has the same slots and slot values
         chunk_idx = [i for i, j in enumerate(self.dm) if j.name == chunk.name][0]
@@ -65,16 +56,19 @@ class Model(object):
         # Add an encounter at the current time
         self.dm[chunk_idx].add_encounter(self.time)
 
+        slot_vals = chunk.slots.values()
+
         # Add slot values as singleton chunks
-        for v in chunk.slots.values():
+        for v in slot_vals:
             if type(v) == str and v not in [ch.name for ch in self.dm]:  # NT: we want some contraints on the adding of chunks
                 s = Chunk(name = v, slots = {})
                 self.add_encounter(s)
-
-        # Recalculate the fan
-        self.update_fan()
-
-
+        
+        # Increment the fan of all chunks that this chunk references in its slots
+        if update_fan:
+            refs = [i for i, ref in enumerate(self.dm) if ref.name in slot_vals]
+            for ref in refs:
+                self.dm[ref].fan += 1
 
 
     def get_activation_no_noise(self, chunk):
@@ -85,14 +79,11 @@ class Model(object):
         if chunk not in self.dm:
             raise ValueError("The specified chunk (%s) does not exist in DM" % str(chunk.name))
 
-        chunk_idx = [i for i, j in enumerate(self.dm) if j.name == chunk.name][0]
-        c = self.dm[chunk_idx]
-
         # There should be at least one past encounter of the chunk
-        if self.time <= min(c.encounters):
-            raise ValueError("Chunk %s not encountered at or before time %s" % (str(c.name), str(self.time)))
+        if self.time <= min(chunk.encounters):
+            raise ValueError("Chunk %s not encountered at or before time %s" % (str(chunk.name), str(self.time)))
 
-        baselevel_activation = math.log(sum([(self.time - encounter) ** -self.d for encounter in c.encounters if encounter < self.time]))
+        baselevel_activation = math.log(sum([(self.time - encounter) ** -self.d for encounter in chunk.encounters if encounter < self.time]))
 
         spreading_activation = self.get_spreading_activation_from_goal(chunk)
 
@@ -188,14 +179,17 @@ class Model(object):
         Returns a blend of the requested slot value from all chunks in DM that match the specified pattern, weighted by their activation
         """
 
-        eligible_chunks = [ch for ch in self.dm if self.match(ch, pattern) and slot in ch.slots and ch.slots[slot]]
-        
         latency = self.lf * math.exp(-self.le * self.rt) # Latency is determined by the retrieval threshold
+
+        eligible_chunks = [ch for ch in self.dm if self.match(ch, pattern) and slot in ch.slots and ch.slots[slot]]
         
         if not eligible_chunks:
             return None, latency
 
-        return sum([self.get_retrieval_probability(ch, pattern) * ch.slots[slot] for ch in eligible_chunks]), latency
+        chunk_probs = dict([(ch, math.exp(self.get_activation_no_noise(ch) / self.s)) for ch in eligible_chunks])
+        blended_value = sum([ch.slots[slot] * prob / sum(chunk_probs.values()) for ch, prob in chunk_probs.items()])
+
+        return blended_value, latency
 
 
     def __str__(self):
