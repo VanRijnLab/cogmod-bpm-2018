@@ -17,6 +17,7 @@ class Model(object):
     
     rt = -1.0 # retrieval threshold (:rt; default: 0.0)
 
+    mp = 3.0 # mismatch penalty (:mp)
 
     def __init__(self):
         self.time = 0
@@ -163,6 +164,54 @@ class Model(object):
         else:
             latency = self.lf * math.exp(-self.le * bestActivation) # calculate it here to avoid a new noise draw
         return bestMatch, latency
+    
+    def mismatch(self, value1, value2):
+        """
+        Calculate the mismatch between two slot values. If the two values are the same, the mismatch is 0.
+        Otherwise, use the square root of the distance between the numbers as mismatch value
+        """
+        if value1 == value2:
+            return 0.0
+        if type(value1) == str or type(value2) == str:
+            return None
+        return -math.sqrt(abs(float(value1) - float(value2)))/5 
+
+    def partial_match(self, chunk, pattern):
+        """
+        Retrieve a chunk using partial matching.
+        """
+        penalty = 0
+        for slot, value in pattern.slots.items():
+            if not(slot in chunk.slots):
+                return None
+            similarity = self.mismatch(chunk.slots[slot], value)
+            if similarity == None:
+                return None
+            penalty += similarity * self.mp
+        return penalty
+            
+    
+    def retrieve_partial(self, chunk, trace=False):
+        """
+        Retrieve a chunk using partial matching. This version only partially matches on numbers, and will
+        use a predefined distance function
+        """
+        bestMatch = None
+        bestActivation = self.rt
+        for ch in self.dm:
+            act = self.get_activation(ch)
+            penalty = self.partial_match(ch, chunk)
+          
+            if penalty != None and act + penalty > bestActivation:
+                bestMatch = ch
+                bestActivation = act + penalty
+            if trace == True and penalty != None:
+                print("Chunk %s has activation %f and penalty %f" % (ch.name, act, penalty))
+        if bestMatch == None:
+            latency = self.lf * math.exp(-self.le * self.rt)
+        else:
+            latency = self.lf * math.exp(-self.le * bestActivation) # calculate it here to avoid a new noise draw
+        return bestMatch, latency        
 
 
     def get_retrieval_probability(self, chunk, pattern):
