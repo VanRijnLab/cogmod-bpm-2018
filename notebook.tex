@@ -1,0 +1,970 @@
+
+% Default to the notebook output style
+
+    
+
+
+% Inherit from the specified cell style.
+
+
+
+
+    
+\documentclass[11pt]{article}
+
+    
+    
+    \usepackage[T1]{fontenc}
+    % Nicer default font (+ math font) than Computer Modern for most use cases
+    \usepackage{mathpazo}
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % We will generate all images so they have a width \maxwidth. This means
+    % that they will get their normal width if they fit onto the page, but
+    % are scaled down if they would overflow the margins.
+    \makeatletter
+    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+    \else\Gin@nat@width\fi}
+    \makeatother
+    \let\Oldincludegraphics\includegraphics
+    % Set max figure width to be 80% of text width, for now hardcoded.
+    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionLabelFormat{nolabel}{}
+    \captionsetup{labelformat=nolabel}
+
+    \usepackage{adjustbox} % Used to constrain images to a maximum size 
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range 
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    
+
+    
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatability definitions
+    \def\gt{>}
+    \def\lt{<}
+    % Document parameters
+    \title{Sugar Factory Model}
+    
+    
+    
+
+    % Pygments definitions
+    
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+    \begin{document}
+    
+    
+    \maketitle
+    
+    
+
+    
+    \subsection{Example model: Sugar
+Factory}\label{example-model-sugar-factory}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}1}]:} \PY{k+kn}{from} \PY{n+nn}{model} \PY{k}{import} \PY{n}{Model}
+        \PY{k+kn}{from} \PY{n+nn}{chunk} \PY{k}{import} \PY{n}{Chunk}
+        \PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+        \PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+        \PY{k+kn}{import} \PY{n+nn}{random}
+        
+        \PY{n}{m} \PY{o}{=} \PY{n}{Model}\PY{p}{(}\PY{p}{)}
+        \PY{n}{m}\PY{o}{.}\PY{n}{rt} \PY{o}{=} \PY{o}{\PYZhy{}}\PY{l+m+mf}{5.0}
+\end{Verbatim}
+
+
+    First define the function that calculates the output of the factory
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}2}]:} \PY{k}{def} \PY{n+nf}{sugar}\PY{p}{(}\PY{n}{w}\PY{p}{)}\PY{p}{:}
+            \PY{n}{new} \PY{o}{=} \PY{l+m+mi}{2} \PY{o}{*} \PY{n}{w} \PY{o}{\PYZhy{}} \PY{n}{production} \PY{o}{+} \PY{n}{random}\PY{o}{.}\PY{n}{randint}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+            \PY{k}{if} \PY{n}{new} \PY{o}{\PYZlt{}} \PY{l+m+mi}{1}\PY{p}{:}
+                \PY{n}{new} \PY{o}{=} \PY{l+m+mi}{1}
+            \PY{k}{elif} \PY{n}{new} \PY{o}{\PYZgt{}} \PY{l+m+mi}{12}\PY{p}{:}
+                \PY{n}{new} \PY{o}{=} \PY{l+m+mi}{12}
+            \PY{k}{return} \PY{n}{new}
+\end{Verbatim}
+
+
+    Set day to 1 and production to 5
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}3}]:} \PY{n}{day} \PY{o}{=} \PY{l+m+mi}{1}
+        \PY{n}{production} \PY{o}{=} \PY{l+m+mi}{5}
+        \PY{n}{workers} \PY{o}{=} \PY{n}{random}\PY{o}{.}\PY{n}{randint}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{10}\PY{p}{)}
+        \PY{n}{target} \PY{o}{=} \PY{l+m+mi}{9}
+\end{Verbatim}
+
+
+    The following function calculates makes a decision for one day at the
+factory. For the first 10 days it just picks a random number of workers
+in order to create some examples in memory. After that, it will use
+partial matching to retrieve an experience form memory that is most
+similar to the current situation. That is: it retrieves an experience
+with the current production as "yesterday", today's production at 9
+(because that is the goal). It then uses the retrieved number of workers
+as its decision. The result is then added to declarative memory.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}4}]:} \PY{k}{def} \PY{n+nf}{default\PYZus{}strategy}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+            \PY{k}{if} \PY{n}{production} \PY{o}{\PYZgt{}} \PY{n}{target}\PY{p}{:}
+                \PY{k}{return} \PY{n}{workers} \PY{o}{\PYZhy{}} \PY{n}{random}\PY{o}{.}\PY{n}{randint}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{)}
+            \PY{k}{elif} \PY{n}{production} \PY{o}{\PYZlt{}} \PY{n}{target}\PY{p}{:}
+                \PY{k}{return} \PY{n}{workers} \PY{o}{+} \PY{n}{random}\PY{o}{.}\PY{n}{randint}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{)}
+            \PY{k}{else}\PY{p}{:}
+                \PY{k}{return} \PY{n}{workers}
+        
+        \PY{k}{def} \PY{n+nf}{do\PYZus{}a\PYZus{}day}\PY{p}{(}\PY{n}{trace} \PY{o}{=} \PY{k+kc}{True}\PY{p}{)}\PY{p}{:}
+            \PY{k}{global} \PY{n}{day}
+            \PY{k}{global} \PY{n}{production}
+            \PY{k}{global} \PY{n}{workers}
+            \PY{k}{if} \PY{n}{trace}\PY{p}{:}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Day }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{n}{day}\PY{p}{)}
+            \PY{n}{request} \PY{o}{=} \PY{n}{Chunk}\PY{p}{(}\PY{n}{name} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{request}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{slots} \PY{o}{=} \PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{yesterday}\PY{l+s+s2}{\PYZdq{}} \PY{p}{:} \PY{n}{production}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{today}\PY{l+s+s2}{\PYZdq{}} \PY{p}{:} \PY{l+m+mi}{9}\PY{p}{\PYZcb{}}\PY{p}{)}
+            \PY{n}{result}\PY{p}{,} \PY{n}{latency} \PY{o}{=} \PY{n}{m}\PY{o}{.}\PY{n}{retrieve\PYZus{}partial}\PY{p}{(}\PY{n}{request}\PY{p}{,} \PY{n}{trace} \PY{o}{=} \PY{n}{trace}\PY{p}{)}
+            \PY{n}{m}\PY{o}{.}\PY{n}{time} \PY{o}{+}\PY{o}{=} \PY{n}{latency}
+            \PY{k}{if} \PY{n}{result} \PY{o}{==} \PY{k+kc}{None}\PY{p}{:}
+                \PY{n}{workers} \PY{o}{=} \PY{n}{default\PYZus{}strategy}\PY{p}{(}\PY{p}{)}
+            \PY{k}{else}\PY{p}{:}
+                \PY{n}{workers} \PY{o}{=} \PY{n}{result}\PY{o}{.}\PY{n}{slots}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{workers}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+                \PY{n}{m}\PY{o}{.}\PY{n}{add\PYZus{}encounter}\PY{p}{(}\PY{n}{result}\PY{p}{)} \PY{c+c1}{\PYZsh{} reinforce retrieved chunk}
+                \PY{k}{if} \PY{n}{trace}\PY{p}{:}
+                    \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Retrieved chunk:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                    \PY{n+nb}{print}\PY{p}{(}\PY{n}{result}\PY{p}{)}
+            \PY{n}{output} \PY{o}{=} \PY{n}{sugar}\PY{p}{(}\PY{n}{workers}\PY{p}{)}
+            \PY{k}{if} \PY{n}{trace}\PY{p}{:}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{New experience:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+            \PY{n}{new\PYZus{}chunk} \PY{o}{=} \PY{n}{Chunk}\PY{p}{(}\PY{n}{name} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{experience}\PY{l+s+s2}{\PYZdq{}} \PY{o}{+} \PY{n+nb}{str}\PY{p}{(}\PY{n}{day}\PY{p}{)}\PY{p}{,} \PY{n}{slots} \PY{o}{=} \PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{yesterday}\PY{l+s+s2}{\PYZdq{}} \PY{p}{:} \PY{n}{production}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{workers}\PY{l+s+s2}{\PYZdq{}} \PY{p}{:} \PY{n}{workers}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{today}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{output}\PY{p}{\PYZcb{}}\PY{p}{)}
+            \PY{n}{m}\PY{o}{.}\PY{n}{add\PYZus{}encounter}\PY{p}{(}\PY{n}{new\PYZus{}chunk}\PY{p}{)}
+            \PY{n}{day} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+            \PY{n}{production} \PY{o}{=} \PY{n}{output}
+            \PY{n}{m}\PY{o}{.}\PY{n}{time} \PY{o}{+}\PY{o}{=} \PY{l+m+mf}{5.0}
+            \PY{k}{if} \PY{n}{trace}\PY{p}{:}
+                \PY{n+nb}{print}\PY{p}{(}\PY{n}{new\PYZus{}chunk}\PY{p}{)}
+\end{Verbatim}
+
+
+    If we now run the model for a number of days, we can observe its
+decisions. Remember that the first 10 experiences are random.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}5}]:} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{20}\PY{p}{)}\PY{p}{:}
+            \PY{n}{do\PYZus{}a\PYZus{}day}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Day 1
+New experience:
+Chunk experience1
+Slots: \{'yesterday': 5, 'workers': 12, 'today': 12\}
+Encounters: [14.841315910257661]
+Fan: 0
+
+Day 2
+Chunk experience1 has activation -1.050620 and penalty -2.626681
+Retrieved chunk:
+Chunk experience1
+Slots: \{'yesterday': 5, 'workers': 12, 'today': 12\}
+Encounters: [14.841315910257661, 23.795271798705354]
+Fan: 0
+
+New experience:
+Chunk experience2
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [23.795271798705354]
+Fan: 0
+
+Day 3
+Chunk experience1 has activation -0.445098 and penalty -2.626681
+Chunk experience2 has activation -0.722845 and penalty -1.039230
+Retrieved chunk:
+Chunk experience2
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [23.795271798705354, 29.377723004087436]
+Fan: 0
+
+New experience:
+Chunk experience3
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 11\}
+Encounters: [29.377723004087436]
+Fan: 0
+
+Day 4
+Chunk experience1 has activation -0.501285 and penalty -2.508924
+Chunk experience2 has activation 0.098270 and penalty -1.639230
+Chunk experience3 has activation -0.194345 and penalty -1.448528
+Retrieved chunk:
+Chunk experience2
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [23.795271798705354, 29.377723004087436, 34.844630209518044]
+Fan: 0
+
+New experience:
+Chunk experience4
+Slots: \{'yesterday': 11, 'workers': 12, 'today': 12\}
+Encounters: [34.844630209518044]
+Fan: 0
+
+Day 5
+Chunk experience1 has activation -0.291622 and penalty -2.626681
+Chunk experience2 has activation 0.543814 and penalty -1.039230
+Chunk experience3 has activation -1.283909 and penalty -0.848528
+Chunk experience4 has activation -0.572255 and penalty -1.639230
+Retrieved chunk:
+Chunk experience2
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [23.795271798705354, 29.377723004087436, 34.844630209518044, 40.008748363797416]
+Fan: 0
+
+New experience:
+Chunk experience5
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [40.008748363797416]
+Fan: 0
+
+Day 6
+Chunk experience1 has activation 0.026832 and penalty -2.626681
+Chunk experience2 has activation 0.088177 and penalty -1.039230
+Chunk experience3 has activation -1.700075 and penalty -0.848528
+Chunk experience4 has activation -1.002515 and penalty -1.639230
+Chunk experience5 has activation -0.908214 and penalty -1.039230
+Retrieved chunk:
+Chunk experience2
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [23.795271798705354, 29.377723004087436, 34.844630209518044, 40.008748363797416, 45.267591919245085]
+Fan: 0
+
+New experience:
+Chunk experience6
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [45.267591919245085]
+Fan: 0
+
+Day 7
+Chunk experience1 has activation -0.564710 and penalty -2.626681
+Chunk experience2 has activation -0.135720 and penalty -1.039230
+Chunk experience3 has activation -1.627668 and penalty -0.848528
+Chunk experience4 has activation -1.752250 and penalty -1.639230
+Chunk experience5 has activation -1.421618 and penalty -1.039230
+Chunk experience6 has activation -1.476960 and penalty -1.039230
+Retrieved chunk:
+Chunk experience2
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [23.795271798705354, 29.377723004087436, 34.844630209518044, 40.008748363797416, 45.267591919245085, 50.5913902603139]
+Fan: 0
+
+New experience:
+Chunk experience7
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [50.5913902603139]
+Fan: 0
+
+Day 8
+Chunk experience1 has activation -1.462130 and penalty -2.626681
+Chunk experience2 has activation 0.646445 and penalty -1.039230
+Chunk experience3 has activation -1.601258 and penalty -0.848528
+Chunk experience4 has activation -1.938534 and penalty -1.639230
+Chunk experience5 has activation -1.869907 and penalty -1.039230
+Chunk experience6 has activation -0.318612 and penalty -1.039230
+Chunk experience7 has activation -0.643244 and penalty -1.039230
+Retrieved chunk:
+Chunk experience2
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [23.795271798705354, 29.377723004087436, 34.844630209518044, 40.008748363797416, 45.267591919245085, 50.5913902603139, 55.73950029925745]
+Fan: 0
+
+New experience:
+Chunk experience8
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 11\}
+Encounters: [55.73950029925745]
+Fan: 0
+
+Day 9
+Chunk experience1 has activation -1.464586 and penalty -2.508924
+Chunk experience2 has activation 0.602266 and penalty -1.639230
+Chunk experience3 has activation -1.785020 and penalty -1.448528
+Chunk experience4 has activation -1.532985 and penalty -1.039230
+Chunk experience5 has activation -1.816869 and penalty -1.639230
+Chunk experience6 has activation -1.589508 and penalty -1.639230
+Chunk experience7 has activation -0.624627 and penalty -1.639230
+Chunk experience8 has activation -0.406683 and penalty -1.448528
+Retrieved chunk:
+Chunk experience2
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [23.795271798705354, 29.377723004087436, 34.844630209518044, 40.008748363797416, 45.267591919245085, 50.5913902603139, 55.73950029925745, 61.02156451060638]
+Fan: 0
+
+New experience:
+Chunk experience9
+Slots: \{'yesterday': 11, 'workers': 12, 'today': 12\}
+Encounters: [61.02156451060638]
+Fan: 0
+
+Day 10
+Chunk experience1 has activation -1.377883 and penalty -2.626681
+Chunk experience2 has activation 0.408349 and penalty -1.039230
+Chunk experience3 has activation -1.407266 and penalty -0.848528
+Chunk experience4 has activation -1.645701 and penalty -1.639230
+Chunk experience5 has activation -1.188868 and penalty -1.039230
+Chunk experience6 has activation -1.055257 and penalty -1.039230
+Chunk experience7 has activation -1.464959 and penalty -1.039230
+Chunk experience8 has activation -1.451237 and penalty -0.848528
+Chunk experience9 has activation -0.933219 and penalty -1.639230
+Retrieved chunk:
+Chunk experience2
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [23.795271798705354, 29.377723004087436, 34.844630209518044, 40.008748363797416, 45.267591919245085, 50.5913902603139, 55.73950029925745, 61.02156451060638, 66.2094912208596]
+Fan: 0
+
+New experience:
+Chunk experience10
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [66.2094912208596]
+Fan: 0
+
+Day 11
+Chunk experience1 has activation -0.928783 and penalty -2.626681
+Chunk experience2 has activation 0.785587 and penalty -1.039230
+Chunk experience3 has activation -1.810610 and penalty -0.848528
+Chunk experience4 has activation -1.580950 and penalty -1.639230
+Chunk experience5 has activation -1.052067 and penalty -1.039230
+Chunk experience6 has activation -1.829949 and penalty -1.039230
+Chunk experience7 has activation -1.884351 and penalty -1.039230
+Chunk experience8 has activation -1.637618 and penalty -0.848528
+Chunk experience9 has activation -1.345228 and penalty -1.639230
+Chunk experience10 has activation -1.035644 and penalty -1.039230
+Retrieved chunk:
+Chunk experience2
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [23.795271798705354, 29.377723004087436, 34.844630209518044, 40.008748363797416, 45.267591919245085, 50.5913902603139, 55.73950029925745, 61.02156451060638, 66.2094912208596, 71.33836240054279]
+Fan: 0
+
+New experience:
+Chunk experience11
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [71.33836240054279]
+Fan: 0
+
+Day 12
+Chunk experience1 has activation -1.947776 and penalty -2.626681
+Chunk experience2 has activation 0.215285 and penalty -1.039230
+Chunk experience3 has activation -2.170445 and penalty -0.848528
+Chunk experience4 has activation -2.013757 and penalty -1.639230
+Chunk experience5 has activation -0.784339 and penalty -1.039230
+Chunk experience6 has activation -1.799099 and penalty -1.039230
+Chunk experience7 has activation -1.616639 and penalty -1.039230
+Chunk experience8 has activation -1.318360 and penalty -0.848528
+Chunk experience9 has activation -1.155708 and penalty -1.639230
+Chunk experience10 has activation -1.571377 and penalty -1.039230
+Chunk experience11 has activation -0.929589 and penalty -1.039230
+Retrieved chunk:
+Chunk experience2
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [23.795271798705354, 29.377723004087436, 34.844630209518044, 40.008748363797416, 45.267591919245085, 50.5913902603139, 55.73950029925745, 61.02156451060638, 66.2094912208596, 71.33836240054279, 76.56630994450386]
+Fan: 0
+
+New experience:
+Chunk experience12
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [76.56630994450386]
+Fan: 0
+
+Day 13
+Chunk experience1 has activation -0.895828 and penalty -2.626681
+Chunk experience2 has activation 0.832957 and penalty -1.039230
+Chunk experience3 has activation -1.805130 and penalty -0.848528
+Chunk experience4 has activation -2.573145 and penalty -1.639230
+Chunk experience5 has activation -2.217617 and penalty -1.039230
+Chunk experience6 has activation -2.728650 and penalty -1.039230
+Chunk experience7 has activation -1.415064 and penalty -1.039230
+Chunk experience8 has activation -1.398550 and penalty -0.848528
+Chunk experience9 has activation -1.640752 and penalty -1.639230
+Chunk experience10 has activation -1.512475 and penalty -1.039230
+Chunk experience11 has activation -0.960123 and penalty -1.039230
+Chunk experience12 has activation -0.977930 and penalty -1.039230
+Retrieved chunk:
+Chunk experience2
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [23.795271798705354, 29.377723004087436, 34.844630209518044, 40.008748363797416, 45.267591919245085, 50.5913902603139, 55.73950029925745, 61.02156451060638, 66.2094912208596, 71.33836240054279, 76.56630994450386, 81.68921881733861]
+Fan: 0
+
+New experience:
+Chunk experience13
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [81.68921881733861]
+Fan: 0
+
+Day 14
+Chunk experience1 has activation -1.502795 and penalty -2.626681
+Chunk experience2 has activation 1.678653 and penalty -1.039230
+Chunk experience3 has activation -2.316224 and penalty -0.848528
+Chunk experience4 has activation -2.093199 and penalty -1.639230
+Chunk experience5 has activation -2.067872 and penalty -1.039230
+Chunk experience6 has activation -2.340497 and penalty -1.039230
+Chunk experience7 has activation -2.199673 and penalty -1.039230
+Chunk experience8 has activation -1.885504 and penalty -0.848528
+Chunk experience9 has activation -1.986005 and penalty -1.639230
+Chunk experience10 has activation -1.173070 and penalty -1.039230
+Chunk experience11 has activation -1.338585 and penalty -1.039230
+Chunk experience12 has activation -1.296068 and penalty -1.039230
+Chunk experience13 has activation -0.826648 and penalty -1.039230
+Retrieved chunk:
+Chunk experience2
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [23.795271798705354, 29.377723004087436, 34.844630209518044, 40.008748363797416, 45.267591919245085, 50.5913902603139, 55.73950029925745, 61.02156451060638, 66.2094912208596, 71.33836240054279, 76.56630994450386, 81.68921881733861, 86.74197852256759]
+Fan: 0
+
+New experience:
+Chunk experience14
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 11\}
+Encounters: [86.74197852256759]
+Fan: 0
+
+Day 15
+Chunk experience1 has activation -1.277118 and penalty -2.508924
+Chunk experience2 has activation 0.551586 and penalty -1.639230
+Chunk experience3 has activation -1.858469 and penalty -1.448528
+Chunk experience4 has activation -1.633008 and penalty -1.039230
+Chunk experience5 has activation -1.544598 and penalty -1.639230
+Chunk experience6 has activation -1.501184 and penalty -1.639230
+Chunk experience7 has activation -2.656010 and penalty -1.639230
+Chunk experience8 has activation -1.746021 and penalty -1.448528
+Chunk experience9 has activation -2.039286 and penalty -1.039230
+Chunk experience10 has activation -1.729324 and penalty -1.639230
+Chunk experience11 has activation -1.768799 and penalty -1.639230
+Chunk experience12 has activation -1.253202 and penalty -1.639230
+Chunk experience13 has activation -1.399348 and penalty -1.639230
+Chunk experience14 has activation -1.057972 and penalty -1.448528
+Retrieved chunk:
+Chunk experience2
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [23.795271798705354, 29.377723004087436, 34.844630209518044, 40.008748363797416, 45.267591919245085, 50.5913902603139, 55.73950029925745, 61.02156451060638, 66.2094912208596, 71.33836240054279, 76.56630994450386, 81.68921881733861, 86.74197852256759, 92.03870622184093]
+Fan: 0
+
+New experience:
+Chunk experience15
+Slots: \{'yesterday': 11, 'workers': 12, 'today': 12\}
+Encounters: [92.03870622184093]
+Fan: 0
+
+Day 16
+Chunk experience1 has activation -1.006950 and penalty -2.626681
+Chunk experience2 has activation 1.101319 and penalty -1.039230
+Chunk experience3 has activation -2.358282 and penalty -0.848528
+Chunk experience4 has activation -1.509851 and penalty -1.639230
+Chunk experience5 has activation -1.493585 and penalty -1.039230
+Chunk experience6 has activation -1.789929 and penalty -1.039230
+Chunk experience7 has activation -1.630760 and penalty -1.039230
+Chunk experience8 has activation -2.236501 and penalty -0.848528
+Chunk experience9 has activation -1.771909 and penalty -1.639230
+Chunk experience10 has activation -2.268828 and penalty -1.039230
+Chunk experience11 has activation -1.443144 and penalty -1.039230
+Chunk experience12 has activation -1.378718 and penalty -1.039230
+Chunk experience13 has activation -1.108109 and penalty -1.039230
+Chunk experience14 has activation -0.789286 and penalty -0.848528
+Chunk experience15 has activation -0.086064 and penalty -1.639230
+Retrieved chunk:
+Chunk experience2
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [23.795271798705354, 29.377723004087436, 34.844630209518044, 40.008748363797416, 45.267591919245085, 50.5913902603139, 55.73950029925745, 61.02156451060638, 66.2094912208596, 71.33836240054279, 76.56630994450386, 81.68921881733861, 86.74197852256759, 92.03870622184093, 97.13268619875444]
+Fan: 0
+
+New experience:
+Chunk experience16
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [97.13268619875444]
+Fan: 0
+
+Day 17
+Chunk experience1 has activation -1.695550 and penalty -2.626681
+Chunk experience2 has activation 1.337995 and penalty -1.039230
+Chunk experience3 has activation -1.715520 and penalty -0.848528
+Chunk experience4 has activation -2.457039 and penalty -1.639230
+Chunk experience5 has activation -1.774106 and penalty -1.039230
+Chunk experience6 has activation -1.828675 and penalty -1.039230
+Chunk experience7 has activation -2.137230 and penalty -1.039230
+Chunk experience8 has activation -2.237174 and penalty -0.848528
+Chunk experience9 has activation -1.616144 and penalty -1.639230
+Chunk experience10 has activation -1.341343 and penalty -1.039230
+Chunk experience11 has activation -1.476025 and penalty -1.039230
+Chunk experience12 has activation -1.383305 and penalty -1.039230
+Chunk experience13 has activation -1.460977 and penalty -1.039230
+Chunk experience14 has activation -1.252851 and penalty -0.848528
+Chunk experience15 has activation -1.123515 and penalty -1.639230
+Chunk experience16 has activation -0.403001 and penalty -1.039230
+Retrieved chunk:
+Chunk experience2
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [23.795271798705354, 29.377723004087436, 34.844630209518044, 40.008748363797416, 45.267591919245085, 50.5913902603139, 55.73950029925745, 61.02156451060638, 66.2094912208596, 71.33836240054279, 76.56630994450386, 81.68921881733861, 86.74197852256759, 92.03870622184093, 97.13268619875444, 102.20685963333156]
+Fan: 0
+
+New experience:
+Chunk experience17
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 11\}
+Encounters: [102.20685963333156]
+Fan: 0
+
+Day 18
+Chunk experience1 has activation -2.118493 and penalty -2.508924
+Chunk experience2 has activation 0.846037 and penalty -1.639230
+Chunk experience3 has activation -2.349192 and penalty -1.448528
+Chunk experience4 has activation -1.994307 and penalty -1.039230
+Chunk experience5 has activation -2.040886 and penalty -1.639230
+Chunk experience6 has activation -2.056823 and penalty -1.639230
+Chunk experience7 has activation -2.179923 and penalty -1.639230
+Chunk experience8 has activation -1.770563 and penalty -1.448528
+Chunk experience9 has activation -1.450467 and penalty -1.039230
+Chunk experience10 has activation -1.841817 and penalty -1.639230
+Chunk experience11 has activation -1.682966 and penalty -1.639230
+Chunk experience12 has activation -1.668818 and penalty -1.639230
+Chunk experience13 has activation -2.093282 and penalty -1.639230
+Chunk experience14 has activation -2.027535 and penalty -1.448528
+Chunk experience15 has activation -0.417413 and penalty -1.039230
+Chunk experience16 has activation -0.357442 and penalty -1.639230
+Chunk experience17 has activation -0.858703 and penalty -1.448528
+Retrieved chunk:
+Chunk experience2
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [23.795271798705354, 29.377723004087436, 34.844630209518044, 40.008748363797416, 45.267591919245085, 50.5913902603139, 55.73950029925745, 61.02156451060638, 66.2094912208596, 71.33836240054279, 76.56630994450386, 81.68921881733861, 86.74197852256759, 92.03870622184093, 97.13268619875444, 102.20685963333156, 107.42790415646631]
+Fan: 0
+
+New experience:
+Chunk experience18
+Slots: \{'yesterday': 11, 'workers': 12, 'today': 12\}
+Encounters: [107.42790415646631]
+Fan: 0
+
+Day 19
+Chunk experience1 has activation -1.369155 and penalty -2.626681
+Chunk experience2 has activation 1.138031 and penalty -1.039230
+Chunk experience3 has activation -2.321632 and penalty -0.848528
+Chunk experience4 has activation -2.331739 and penalty -1.639230
+Chunk experience5 has activation -2.050526 and penalty -1.039230
+Chunk experience6 has activation -1.933925 and penalty -1.039230
+Chunk experience7 has activation -2.049638 and penalty -1.039230
+Chunk experience8 has activation -1.967379 and penalty -0.848528
+Chunk experience9 has activation -1.876794 and penalty -1.639230
+Chunk experience10 has activation -1.279809 and penalty -1.039230
+Chunk experience11 has activation -1.966708 and penalty -1.039230
+Chunk experience12 has activation -2.113458 and penalty -1.039230
+Chunk experience13 has activation -1.518332 and penalty -1.039230
+Chunk experience14 has activation -1.710748 and penalty -0.848528
+Chunk experience15 has activation -1.009686 and penalty -1.639230
+Chunk experience16 has activation -1.270656 and penalty -1.039230
+Chunk experience17 has activation -1.005256 and penalty -0.848528
+Chunk experience18 has activation -0.626698 and penalty -1.639230
+Retrieved chunk:
+Chunk experience2
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [23.795271798705354, 29.377723004087436, 34.844630209518044, 40.008748363797416, 45.267591919245085, 50.5913902603139, 55.73950029925745, 61.02156451060638, 66.2094912208596, 71.33836240054279, 76.56630994450386, 81.68921881733861, 86.74197852256759, 92.03870622184093, 97.13268619875444, 102.20685963333156, 107.42790415646631, 112.5184965058056]
+Fan: 0
+
+New experience:
+Chunk experience19
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [112.5184965058056]
+Fan: 0
+
+Day 20
+Chunk experience1 has activation -1.401903 and penalty -2.626681
+Chunk experience2 has activation 1.360984 and penalty -1.039230
+Chunk experience3 has activation -2.349960 and penalty -0.848528
+Chunk experience4 has activation -2.459505 and penalty -1.639230
+Chunk experience5 has activation -2.658829 and penalty -1.039230
+Chunk experience6 has activation -1.946262 and penalty -1.039230
+Chunk experience7 has activation -1.685630 and penalty -1.039230
+Chunk experience8 has activation -1.842170 and penalty -0.848528
+Chunk experience9 has activation -2.128708 and penalty -1.639230
+Chunk experience10 has activation -2.033033 and penalty -1.039230
+Chunk experience11 has activation -2.059795 and penalty -1.039230
+Chunk experience12 has activation -2.061959 and penalty -1.039230
+Chunk experience13 has activation -1.464063 and penalty -1.039230
+Chunk experience14 has activation -1.960563 and penalty -0.848528
+Chunk experience15 has activation -1.557912 and penalty -1.639230
+Chunk experience16 has activation -1.230538 and penalty -1.039230
+Chunk experience17 has activation -1.209785 and penalty -0.848528
+Chunk experience18 has activation -0.522744 and penalty -1.639230
+Chunk experience19 has activation -0.326806 and penalty -1.039230
+Retrieved chunk:
+Chunk experience2
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [23.795271798705354, 29.377723004087436, 34.844630209518044, 40.008748363797416, 45.267591919245085, 50.5913902603139, 55.73950029925745, 61.02156451060638, 66.2094912208596, 71.33836240054279, 76.56630994450386, 81.68921881733861, 86.74197852256759, 92.03870622184093, 97.13268619875444, 102.20685963333156, 107.42790415646631, 112.5184965058056, 117.59098416693348]
+Fan: 0
+
+New experience:
+Chunk experience20
+Slots: \{'yesterday': 12, 'workers': 12, 'today': 12\}
+Encounters: [117.59098416693348]
+Fan: 0
+
+
+    \end{Verbatim}
+
+    Now we define a function to properly run an experiment.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}6}]:} \PY{k}{def} \PY{n+nf}{run\PYZus{}subject}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+            \PY{k}{global} \PY{n}{day}
+            \PY{k}{global} \PY{n}{production}
+            \PY{k}{global} \PY{n}{workers}
+            \PY{k}{global} \PY{n}{m}
+            \PY{n}{production} \PY{o}{=} \PY{l+m+mi}{5}
+            \PY{n}{day} \PY{o}{=} \PY{l+m+mi}{1}
+            \PY{n}{workers} \PY{o}{=} \PY{n}{random}\PY{o}{.}\PY{n}{randint}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{10}\PY{p}{)}
+            \PY{n}{m} \PY{o}{=} \PY{n}{Model}\PY{p}{(}\PY{p}{)}
+            \PY{n}{m}\PY{o}{.}\PY{n}{rt} \PY{o}{=} \PY{o}{\PYZhy{}}\PY{l+m+mf}{2.0}
+            \PY{n}{accuracies} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+            \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{80}\PY{p}{)}\PY{p}{:}
+                \PY{n}{do\PYZus{}a\PYZus{}day}\PY{p}{(}\PY{n}{trace} \PY{o}{=} \PY{k+kc}{False}\PY{p}{)}
+                \PY{k}{if} \PY{n}{production} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{l+m+mi}{8} \PY{o+ow}{and} \PY{n}{production} \PY{o}{\PYZlt{}}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{:}
+                    \PY{n}{accuracies}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}
+                \PY{k}{else}\PY{p}{:}
+                    \PY{n}{accuracies}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}
+            \PY{k}{return} \PY{n}{accuracies}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}10}]:} \PY{n}{run\PYZus{}subject}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}10}]:} [0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0]
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}8}]:} \PY{k}{def} \PY{n+nf}{run\PYZus{}experiment}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{:}
+            \PY{n}{totals} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+            \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{:}
+                \PY{n}{result} \PY{o}{=} \PY{n}{run\PYZus{}subject}\PY{p}{(}\PY{p}{)}
+                \PY{k}{if} \PY{n}{totals} \PY{o}{==} \PY{p}{[}\PY{p}{]}\PY{p}{:}
+                    \PY{n}{totals} \PY{o}{=} \PY{n}{result}
+                \PY{k}{else}\PY{p}{:}
+                    \PY{n}{totals} \PY{o}{=} \PY{p}{[}\PY{n}{x} \PY{o}{+} \PY{n}{y} \PY{k}{for} \PY{n}{x}\PY{p}{,} \PY{n}{y} \PY{o+ow}{in} \PY{n+nb}{zip}\PY{p}{(}\PY{n}{totals}\PY{p}{,} \PY{n}{result}\PY{p}{)}\PY{p}{]}
+            \PY{n}{totals} \PY{o}{=} \PY{p}{[}\PY{n}{x} \PY{o}{/} \PY{n}{n} \PY{k}{for} \PY{n}{x} \PY{o+ow}{in} \PY{n}{totals}\PY{p}{]}
+            \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{80}\PY{p}{)}\PY{p}{,}\PY{n}{totals}\PY{p}{)}
+            \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{trial}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+            \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{on target}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+            \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Accuracy in Sugar Factory}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}11}]:} \PY{n}{run\PYZus{}experiment}\PY{p}{(}\PY{l+m+mi}{100}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_14_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+    \end{document}
