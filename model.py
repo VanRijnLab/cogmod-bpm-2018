@@ -1,4 +1,4 @@
-from chunk import Chunk
+from dmchunk import Chunk
 import math
 import random
 
